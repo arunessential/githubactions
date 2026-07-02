@@ -9,17 +9,13 @@ on:
 permissions:
   contents: read
 
+env:
+  AWS_REGION: us-east-1
+
 jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
-
-    env:
-      AWS_REGION: us-east-1
-
-    defaults:
-      run:
-        working-directory: .github/workflows
 
     steps:
       - name: Checkout Repository
@@ -34,6 +30,17 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      - name: Show Repository Structure
+        run: |
+          pwd
+          ls -la
+          find . -name "*.tf"
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
 
       - name: Terraform Init
         run: terraform init
@@ -44,27 +51,19 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
-      - name: Upload Plan
+      - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: .github/workflows/tfplan
+          path: tfplan
 
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
     runs-on: ubuntu-latest
 
-    # This environment will pause the workflow until approved
     environment:
       name: production
-
-    env:
-      AWS_REGION: us-east-1
-
-    defaults:
-      run:
-        working-directory: .github/workflows
 
     steps:
       - name: Checkout Repository
@@ -79,15 +78,17 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Download Plan
+      - name: Download Terraform Plan
         uses: actions/download-artifact@v4
         with:
           name: tfplan
-          path: .github/workflows
+          path: .
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
