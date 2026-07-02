@@ -30,16 +30,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.9.8
 
-      - name: Show Repository Structure
-        run: |
-          pwd
-          ls -la
-          find . -name "*.tf"
-
-      - name: Terraform Format Check
+      - name: Terraform Format
         run: terraform fmt -check
 
       - name: Terraform Init
@@ -62,6 +54,7 @@ jobs:
     needs: terraform-plan
     runs-on: ubuntu-latest
 
+    # This pauses the workflow until you approve it
     environment:
       name: production
 
@@ -78,8 +71,6 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.9.8
 
       - name: Terraform Init
         run: terraform init
