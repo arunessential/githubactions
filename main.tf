@@ -18,6 +18,6 @@ resource "aws_instance" "arun_essential" {
   instance_type = "t3.micro"
 
   tags = {
-    Name = "arun-essential"
+    Name = "arun-essentialCICD"
   }
 }
