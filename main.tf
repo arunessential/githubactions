@@ -13,7 +13,7 @@ terraform {
     key            = "ec2/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
-    dynamodb_table = "terraform-locks"
+    use_lockfile = "terraform-locks"
   }
 }
 
