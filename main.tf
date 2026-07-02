@@ -9,10 +9,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "amzn-github-zxc"
-    key            = "ec2/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
+    bucket       = "amzn-github-zxc"
+    key          = "ec2/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
     use_lockfile = true
   }
 }
